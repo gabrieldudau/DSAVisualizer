@@ -1,0 +1,68 @@
+[gd_scene load_steps=5 format=3 uid="uid://d2l645clvxoj7"]
+
+[ext_resource type="Texture2D" uid="uid://cunqtint5r4xr" path="res://icon.svg" id="1_bl13t"]
+[ext_resource type="Texture2D" uid="uid://c2bcktfssxxt0" path="res://assets/Kreis_weiß.png" id="2_iyx0m"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_74lek"]
+size = Vector2(126, 126)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_j5jx5"]
+radius = 30.0666
+
+[node name="Node" type="Node2D"]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D"]
+position = Vector2(572, 154)
+texture = ExtResource("1_bl13t")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(572, 154)
+shape = SubResource("RectangleShape2D_74lek")
+
+[node name="RigidBody2D" type="RigidBody2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="RigidBody2D"]
+position = Vector2(726, 350)
+texture = ExtResource("2_iyx0m")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D"]
+position = Vector2(726, 349)
+shape = SubResource("CircleShape2D_j5jx5")
+
+[node name="Sprite2D2" type="Sprite2D" parent="RigidBody2D"]
+position = Vector2(405, 352)
+texture = ExtResource("2_iyx0m")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="RigidBody2D"]
+position = Vector2(405, 351)
+shape = SubResource("CircleShape2D_j5jx5")
+
+[node name="DampedSpringJoint2D" type="DampedSpringJoint2D" parent="."]
+position = Vector2(572, 153)
+rotation = -0.671952
+node_a = NodePath("../StaticBody2D")
+node_b = NodePath("../RigidBody2D")
+bias = 0.41
+length = 250.0
+rest_length = 5.0
+stiffness = 1.3
+
+[node name="DampedSpringJoint2D2" type="DampedSpringJoint2D" parent="."]
+position = Vector2(571.945, 153)
+rotation = 0.698132
+node_a = NodePath("../StaticBody2D")
+node_b = NodePath("../RigidBody2D")
+length = 260.0
+rest_length = 5.0
+stiffness = 1.3
+
+[node name="DampedSpringJoint2D3" type="DampedSpringJoint2D" parent="."]
+position = Vector2(727.565, 348)
+rotation = 1.55334
+node_a = NodePath("../StaticBody2D")
+node_b = NodePath("../RigidBody2D")
+length = 320.0
+stiffness = 1.0
+damping = 11.65

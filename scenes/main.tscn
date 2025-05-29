@@ -1,11 +1,32 @@
-[gd_scene load_steps=2 format=3 uid="uid://d2xh40qn3a1ii"]
+[gd_scene load_steps=3 format=3 uid="uid://d2xh40qn3a1ii"]
 
 [ext_resource type="Script" uid="uid://77p6d5dnv1pd" path="res://scripts/game_controler.gd" id="1_o5qli"]
+[ext_resource type="Script" uid="uid://bg7gfpb7qqef2" path="res://scripts/add_node.gd" id="2_0wfyh"]
 
-[node name="Main" type="Node"]
-
-[node name="GameControler" type="Node" parent="."]
-unique_name_in_owner = true
+[node name="GameControler" type="Node"]
 script = ExtResource("1_o5qli")
 
+[node name="Control" type="CanvasLayer" parent="."]
+
+[node name="Button" type="Button" parent="Control"]
+offset_left = 24.0
+offset_top = 13.0
+offset_right = 176.0
+offset_bottom = 62.0
+text = "Add Node"
+script = ExtResource("2_0wfyh")
+
+[node name="TextEdit" type="TextEdit" parent="Control"]
+offset_left = 206.0
+offset_top = 13.0
+offset_right = 464.0
+offset_bottom = 62.0
+
 [node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="Lines" type="Node" parent="."]
+
+[node name="TreeNodes" type="Node" parent="."]
+
+[connection signal="mouse_entered" from="Control/Button" to="." method="_on_button_mouse_entered"]
+[connection signal="mouse_entered" from="Control/Button" to="Control/Button" method="_on_mouse_entered"]
