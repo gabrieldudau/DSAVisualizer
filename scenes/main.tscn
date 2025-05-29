@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://d2xh40qn3a1ii"]
+
+[ext_resource type="Script" uid="uid://77p6d5dnv1pd" path="res://scripts/game_controler.gd" id="1_o5qli"]
+
+[node name="Main" type="Node"]
+
+[node name="GameControler" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("1_o5qli")
+
+[node name="Camera2D" type="Camera2D" parent="."]
