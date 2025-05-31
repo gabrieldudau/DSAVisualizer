@@ -1,0 +1,8 @@
+# Creates a tree node at the given position with the given text
+func create_tree_node(position:Vector2, text:String):
+	if Input.is_action_just_pressed("leftMB"):
+		count += 1
+		var tree_node = TREE_NODE.instantiate()
+		tree_node.position = position
+		tree_node.key = count
+		tree_nodes.add_child(tree_node)

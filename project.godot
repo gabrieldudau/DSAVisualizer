@@ -15,6 +15,10 @@ run/main_scene="uid://d2xh40qn3a1ii"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+GlobalSignal="*res://global_signal/global_signal.gd"
+
 [dotnet]
 
 project/assembly_name="Bin_Tree_Visualizer"
@@ -35,3 +39,4 @@ rightMB={
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
+environment/defaults/default_clear_color=Color(0.0968892, 0.323743, 0.441436, 1)

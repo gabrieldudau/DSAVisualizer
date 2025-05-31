@@ -1,32 +1,38 @@
-[gd_scene load_steps=3 format=3 uid="uid://d2xh40qn3a1ii"]
+[gd_scene load_steps=4 format=3 uid="uid://d2xh40qn3a1ii"]
 
 [ext_resource type="Script" uid="uid://77p6d5dnv1pd" path="res://scripts/game_controler.gd" id="1_o5qli"]
-[ext_resource type="Script" uid="uid://bg7gfpb7qqef2" path="res://scripts/add_node.gd" id="2_0wfyh"]
+[ext_resource type="Script" uid="uid://b0t6b0yx088o8" path="res://scripts/tree_node_input.gd" id="3_sugp2"]
+[ext_resource type="Script" uid="uid://cny6u56owmp3m" path="res://scripts/bin_tree_handler.gd" id="4_jyhfs"]
 
-[node name="GameControler" type="Node"]
+[node name="GameControler" type="Node2D"]
 script = ExtResource("1_o5qli")
 
 [node name="Control" type="CanvasLayer" parent="."]
 
-[node name="Button" type="Button" parent="Control"]
-offset_left = 24.0
-offset_top = 13.0
-offset_right = 176.0
-offset_bottom = 62.0
-text = "Add Node"
-script = ExtResource("2_0wfyh")
-
 [node name="TextEdit" type="TextEdit" parent="Control"]
-offset_left = 206.0
+offset_left = 15.0
 offset_top = 13.0
-offset_right = 464.0
+offset_right = 273.0
 offset_bottom = 62.0
+script = ExtResource("3_sugp2")
+
+[node name="Label" type="Label" parent="Control"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_top = 7.0
+offset_right = 20.0
+offset_bottom = 30.0
+grow_horizontal = 2
 
 [node name="Camera2D" type="Camera2D" parent="."]
 
-[node name="Lines" type="Node" parent="."]
+[node name="Lines" type="Node2D" parent="."]
 
-[node name="TreeNodes" type="Node" parent="."]
+[node name="TreeNodes" type="Node2D" parent="."]
+script = ExtResource("4_jyhfs")
 
-[connection signal="mouse_entered" from="Control/Button" to="." method="_on_button_mouse_entered"]
-[connection signal="mouse_entered" from="Control/Button" to="Control/Button" method="_on_mouse_entered"]
+[connection signal="text_changed" from="Control/TextEdit" to="Control/TextEdit" method="_on_text_changed"]
+[connection signal="tree_entered" from="TreeNodes" to="TreeNodes" method="_on_tree_entered"]
+[connection signal="tree_exiting" from="TreeNodes" to="TreeNodes" method="_on_tree_exiting"]

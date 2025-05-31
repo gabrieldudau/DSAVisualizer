@@ -5,13 +5,13 @@
 [ext_resource type="FontFile" uid="uid://bwnejgghmtjhc" path="res://assets/fonts/pixeloid-font/PixeloidMono-d94EV.ttf" id="2_spehj"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_spehj"]
-radius = 92.0
+radius = 61.6604
 
 [node name="TreeNode" type="Area2D"]
 script = ExtResource("1_spehj")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-scale = Vector2(3, 3)
+scale = Vector2(2, 2)
 texture = ExtResource("1_m7hul")
 
 [node name="Label" type="Label" parent="."]
@@ -32,3 +32,4 @@ shape = SubResource("CircleShape2D_spehj")
 
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
+[connection signal="ready" from="." to="." method="_on_ready"]
