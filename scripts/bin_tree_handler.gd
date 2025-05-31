@@ -18,7 +18,8 @@ func add_node(tree_node:Area2D) -> void:
 	var px = null
 
 	var left_subtree = null
-	var place_in_horizontal:String = ""
+	var place_in_horizontal:Array = []
+	var dist = 1
 	while x != null:
 		px = x
 		if (x.key > tree_node.key):
@@ -29,9 +30,9 @@ func add_node(tree_node:Area2D) -> void:
 			if left_subtree == null:
 				left_subtree = true
 			elif left_subtree == true:
-				place_in_horizontal += "1"
+				place_in_horizontal.append(1)
 			else:
-				place_in_horizontal += "0"
+				place_in_horizontal.append(0)
 		else:
 			# actual logic
 			x=x.right
@@ -40,12 +41,12 @@ func add_node(tree_node:Area2D) -> void:
 			if left_subtree == null:
 				left_subtree = false
 			elif left_subtree == true:
-				place_in_horizontal += "0"
+				place_in_horizontal.append(0)
 			else:
-				place_in_horizontal += "1"
-		
+				place_in_horizontal.append(1)
 		# increasing the layer
-		offset_vertical += 150
+		offset_vertical += 150 * dist
+		dist += 0.5
 	
 	tree_node.parent = px
 	if px == null:
@@ -68,10 +69,11 @@ func add_node(tree_node:Area2D) -> void:
 	offset_horizontal *= (-1) if left_subtree else 1 
 	tree_node.position = Vector2(offset_horizontal, offset_vertical)
 	add_child(tree_node)
+	tree_node.connect_line()
 
 
-func convert_bin_to_int(num:String):
+func convert_bin_to_int(num:Array):
 	var sum = 0
-	for i in range (0,num.length()):
-		sum += int(num[i]) * pow(2,num.length() - 1 - i)
+	for i in range (0,num.size()):
+		sum += int(num[i]) * pow(2,num.size() - 1 - i)
 	return sum
