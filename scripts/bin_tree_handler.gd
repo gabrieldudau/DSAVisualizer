@@ -29,10 +29,13 @@ func add_node(tree_node) -> void:
 			# logic for placement of graphical nodes
 			if left_subtree == null:
 				left_subtree = true
+				tree_node.positions_list.append(Vector2(-150, -200))
 			elif left_subtree == true:
 				place_in_horizontal.append(1)
+				tree_node.positions_list.append(Vector2((-1)* (75 + (convert_bin_to_int(place_in_horizontal.slice(0,place_in_horizontal.size() - 1)) * 150)) , offset_vertical))
 			else:
 				place_in_horizontal.append(0)
+				tree_node.positions_list.append(Vector2(75 + (convert_bin_to_int(place_in_horizontal.slice(0,place_in_horizontal.size() -1 )) * 150) , offset_vertical))
 		else:
 			# actual logic
 			x=x.right
@@ -40,10 +43,14 @@ func add_node(tree_node) -> void:
 			# logic for placement of graphical nodes
 			if left_subtree == null:
 				left_subtree = false
+				tree_node.positions_list.append(Vector2(150, -200))
 			elif left_subtree == true:
 				place_in_horizontal.append(0)
+				tree_node.positions_list.append(Vector2((-1)* (75 + (convert_bin_to_int(place_in_horizontal.slice(0,place_in_horizontal.size() - 1)) * 150)) , offset_vertical))
 			else:
 				place_in_horizontal.append(1)
+				tree_node.positions_list.append(Vector2( 75 + (convert_bin_to_int(place_in_horizontal.slice(0,place_in_horizontal.size() - 1)) * 150) , offset_vertical))
+		
 		# increasing the layer
 		offset_vertical += 150 * dist
 		dist += 0.5
@@ -67,10 +74,10 @@ func add_node(tree_node) -> void:
 	
 	var offset_horizontal = 75 + 150*convert_bin_to_int(place_in_horizontal)
 	offset_horizontal *= (-1) if left_subtree else 1 
-	tree_node.position = Vector2(offset_horizontal, offset_vertical)
+	tree_node.positions_list.append(Vector2(offset_horizontal,offset_vertical))
 	add_child(tree_node)
-	tree_node.connect_line()
-
+	tree_node.move_to_right_position(400)
+	
 
 func convert_bin_to_int(num:Array):
 	var sum = 0
