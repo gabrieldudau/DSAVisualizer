@@ -2,9 +2,9 @@ extends Node2D
 
 @onready var label: Label = $Label
 
-var left: Area2D
-var right: Area2D
-var parent: Area2D
+var left 
+var right 
+var parent
 var key: int
 var connection_line:Line2D
 

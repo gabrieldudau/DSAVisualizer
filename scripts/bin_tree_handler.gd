@@ -12,7 +12,7 @@ func _on_tree_exiting() -> void:
 	GlobalSignal.newNode.disconnect(add_node)
 
 
-func add_node(tree_node:Area2D) -> void: 
+func add_node(tree_node) -> void: 
 	var offset_vertical = -200
 	var x = root
 	var px = null
