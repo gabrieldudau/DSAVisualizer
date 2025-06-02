@@ -2,6 +2,8 @@ class_name TreeNode
 extends Node2D
 
 @onready var label: Label = $Label
+@onready var weiß: Sprite2D = $weiß
+@onready var gelb: Sprite2D = $gelb
 
 var left:TreeNode
 var right:TreeNode
@@ -9,9 +11,14 @@ var parent:TreeNode
 var key: int
 var connection_line:Line2D
 var positions_list:Array
+var time:Timer = Timer.new()
+
 
 func _on_ready() -> void:
 	label.text = str(key)
+	gelb.hide()
+	weiß.show()
+	add_child(time)
 
 func connect_line():
 	if(parent == null):
@@ -43,3 +50,16 @@ func move_to_right_position(speed) -> void:
 			await get_tree().process_frame
 		position = position_to_reach
 	connect_line()
+
+func light_up_for_search():
+	weiß.hide()
+	gelb.show()
+	if connection_line != null:
+		connection_line.default_color = Color.ORANGE_RED
+	time.start(3)
+	await time.timeout
+	weiß.show()
+	gelb.hide()
+	if connection_line != null:
+		connection_line.default_color = Color.BLACK
+	

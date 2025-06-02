@@ -1,21 +1,26 @@
-[gd_scene load_steps=4 format=3 uid="uid://de1b000tl1sex"]
+[gd_scene load_steps=5 format=3 uid="uid://de1b000tl1sex"]
 
 [ext_resource type="Texture2D" uid="uid://c2bcktfssxxt0" path="res://assets/Kreis_weiß.png" id="1_m7hul"]
 [ext_resource type="Script" uid="uid://c8etbgdvmoheq" path="res://scripts/tree_node.gd" id="1_spehj"]
 [ext_resource type="FontFile" uid="uid://bwnejgghmtjhc" path="res://assets/fonts/pixeloid-font/PixeloidMono-d94EV.ttf" id="2_spehj"]
+[ext_resource type="Texture2D" uid="uid://cgey5c2r6iyad" path="res://assets/Kreis_gelb.png" id="3_sw2wr"]
 
 [node name="TreeNode" type="Node2D"]
 script = ExtResource("1_spehj")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="weiß" type="Sprite2D" parent="."]
 scale = Vector2(2, 2)
 texture = ExtResource("1_m7hul")
 
+[node name="gelb" type="Sprite2D" parent="."]
+scale = Vector2(2, 2)
+texture = ExtResource("3_sw2wr")
+
 [node name="Label" type="Label" parent="."]
-offset_left = -51.0
-offset_top = -29.0
-offset_right = 51.625
-offset_bottom = 30.25
+offset_left = -50.0
+offset_top = -30.0
+offset_right = 50.0
+offset_bottom = 30.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("2_spehj")
 theme_override_font_sizes/font_size = 36

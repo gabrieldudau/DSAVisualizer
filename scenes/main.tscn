@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://d2xh40qn3a1ii"]
+[gd_scene load_steps=6 format=3 uid="uid://d2xh40qn3a1ii"]
 
 [ext_resource type="Script" uid="uid://77p6d5dnv1pd" path="res://scripts/game_controler.gd" id="1_o5qli"]
 [ext_resource type="Script" uid="uid://b0t6b0yx088o8" path="res://scripts/tree_node_input.gd" id="3_sugp2"]
 [ext_resource type="FontFile" uid="uid://bwnejgghmtjhc" path="res://assets/fonts/pixeloid-font/PixeloidMono-d94EV.ttf" id="3_tbgi4"]
 [ext_resource type="Script" uid="uid://cny6u56owmp3m" path="res://scripts/bin_tree_handler.gd" id="4_jyhfs"]
+[ext_resource type="Script" uid="uid://dl3an2ounkmqq" path="res://scripts/search_node.gd" id="4_tbgi4"]
 
 [node name="GameControler" type="Node2D"]
 script = ExtResource("1_o5qli")
@@ -17,8 +18,18 @@ offset_right = 193.0
 offset_bottom = 40.0
 theme_override_fonts/font = ExtResource("3_tbgi4")
 theme_override_font_sizes/font_size = 18
-placeholder_text = "Add Node:"
+placeholder_text = "Add Node..."
 script = ExtResource("3_sugp2")
+
+[node name="TextEdit2" type="TextEdit" parent="Control"]
+offset_left = 5.0
+offset_top = 40.0
+offset_right = 193.0
+offset_bottom = 76.0
+theme_override_fonts/font = ExtResource("3_tbgi4")
+theme_override_font_sizes/font_size = 18
+placeholder_text = "Search Node..."
+script = ExtResource("4_tbgi4")
 
 [node name="Label" type="Label" parent="Control"]
 anchors_preset = -1
@@ -52,9 +63,9 @@ vertical_alignment = 1
 
 [node name="Button" type="Button" parent="Control"]
 offset_left = 5.0
-offset_top = 46.0
-offset_right = 152.0
-offset_bottom = 82.0
+offset_top = 76.0
+offset_right = 205.0
+offset_bottom = 112.0
 theme_override_fonts/font = ExtResource("3_tbgi4")
 theme_override_font_sizes/font_size = 18
 text = "Add random Nodes"
@@ -65,6 +76,7 @@ text = "Add random Nodes"
 script = ExtResource("4_jyhfs")
 
 [connection signal="text_changed" from="Control/TextEdit" to="Control/TextEdit" method="_on_text_changed"]
+[connection signal="text_changed" from="Control/TextEdit2" to="Control/TextEdit2" method="_on_text_changed"]
 [connection signal="pressed" from="Control/Button" to="TreeNodes" method="_on_button_pressed"]
 [connection signal="tree_entered" from="TreeNodes" to="TreeNodes" method="_on_tree_entered"]
 [connection signal="tree_exiting" from="TreeNodes" to="TreeNodes" method="_on_tree_exiting"]
