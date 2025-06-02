@@ -13,7 +13,7 @@ script = ExtResource("1_o5qli")
 [node name="TextEdit" type="TextEdit" parent="Control"]
 offset_left = 5.0
 offset_top = 4.0
-offset_right = 263.0
+offset_right = 193.0
 offset_bottom = 40.0
 theme_override_fonts/font = ExtResource("3_tbgi4")
 theme_override_font_sizes/font_size = 18
@@ -21,13 +21,13 @@ placeholder_text = "Add Node:"
 script = ExtResource("3_sugp2")
 
 [node name="Label" type="Label" parent="Control"]
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -20.0
-offset_top = 7.0
-offset_right = 20.0
-offset_bottom = 30.0
+anchors_preset = -1
+anchor_left = 0.494
+anchor_right = 0.494
+offset_left = -24.088
+offset_top = 10.0
+offset_right = 23.912
+offset_bottom = 33.0
 grow_horizontal = 2
 theme_override_fonts/font = ExtResource("3_tbgi4")
 theme_override_font_sizes/font_size = 18
@@ -50,11 +50,21 @@ to change the mode"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="Button" type="Button" parent="Control"]
+offset_left = 5.0
+offset_top = 46.0
+offset_right = 152.0
+offset_bottom = 82.0
+theme_override_fonts/font = ExtResource("3_tbgi4")
+theme_override_font_sizes/font_size = 18
+text = "Add random Nodes"
+
 [node name="Camera2D" type="Camera2D" parent="."]
 
 [node name="TreeNodes" type="Node2D" parent="."]
 script = ExtResource("4_jyhfs")
 
 [connection signal="text_changed" from="Control/TextEdit" to="Control/TextEdit" method="_on_text_changed"]
+[connection signal="pressed" from="Control/Button" to="TreeNodes" method="_on_button_pressed"]
 [connection signal="tree_entered" from="TreeNodes" to="TreeNodes" method="_on_tree_entered"]
 [connection signal="tree_exiting" from="TreeNodes" to="TreeNodes" method="_on_tree_exiting"]

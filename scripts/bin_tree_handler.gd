@@ -4,6 +4,7 @@ extends Node2D
 @export var vertical_distance_between_nodes = 150
 
 var root:TreeNode
+const TREE_NODE = preload("res://scenes/tree_node.tscn")
 
 func _on_tree_entered() -> void:
 	GlobalSignal.newNode.connect(add_node)
@@ -82,3 +83,12 @@ func convert_bin_to_pos(num:Array, left:bool) -> Vector2:
 		dist += 0.4
 	return Vector2(((-1) if left else 1) * (self.horizonal_distance_between_nodes/2 + horizontal_sum * self.horizonal_distance_between_nodes), vertical_offset)
 	
+
+
+func _on_button_pressed() -> void:
+	var keys:Array = [32, 16, 48, 8, 24, 40, 56, 4, 12, 20, 28, 36, 44, 52, 60, 2, 6, 10, 14, 18, 22, 26, 30, 34, 38, 42, 46, 50, 54, 58, 62, 1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39, 41, 43, 45, 47, 49, 51, 53, 55, 57, 59, 61, 63]
+	
+	for key in keys:
+		var node = TREE_NODE.instantiate()
+		node.key = key
+		add_node(node)

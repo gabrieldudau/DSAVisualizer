@@ -8,8 +8,13 @@ enum modes {ZOOM_MODE , MOVE_CAMERA_MODE}
 var current_mode := modes.MOVE_CAMERA_MODE
 var left_pressed:bool = false
 
+func _ready() -> void:	
+	camera.zoom = Vector2(.4,.4)
+	camera.position = Vector2(0,800)
+
 
 func _input(event: InputEvent) -> void:
+	print(camera.zoom," - ",camera.position)
 	if event is InputEventMouseButton:
 		if event.is_action_pressed("rightMB"):
 			current_mode = modes.ZOOM_MODE if current_mode == modes.MOVE_CAMERA_MODE else modes.MOVE_CAMERA_MODE
