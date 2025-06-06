@@ -23,9 +23,6 @@ func add_node(tree_node:TreeNode) -> void:
 	var px:TreeNode = null
 
 	var left_subtree = null
-	var position_binary:int
-	var dist = 1
-	var vertical_offset = -200
 	var new_depth = 0
 	
 	while x != null:
@@ -33,34 +30,17 @@ func add_node(tree_node:TreeNode) -> void:
 		if (x.key > tree_node.key):
 			# actual logic
 			x = x.left
-			
 			# logic for placement of graphical nodes
 			if left_subtree == null:
 				left_subtree = true
 				tree_node.positions_list_no_line.append(Vector2(-150, -200))
-			elif left_subtree == true:
-				# tree_node.positions_list_no_line.append(convert_bin_to_pos(position_binary, true, vertical_offset))
-				position_binary = position_binary << 1
-				position_binary += 1
-			else:
-				# tree_node.positions_list_no_line.append(convert_bin_to_pos(position_binary, false, vertical_offset))
-				position_binary = position_binary << 1
 		else:
 			# actual logic
 			x=x.right
-			
 			# logic for placement of graphical nodes
 			if left_subtree == null:
 				left_subtree = false
 				tree_node.positions_list_no_line.append(Vector2(150, -200))
-			elif left_subtree == true:
-				# tree_node.positions_list_no_line.append(convert_bin_to_pos(position_binary, true, vertical_offset))
-				position_binary = position_binary << 1
-			else: 
-				# tree_node.positions_list_no_line.append(convert_bin_to_pos(position_binary, false, vertical_offset))
-				position_binary = position_binary << 1
-				position_binary += 1
-		vertical_offset += vertical_distance_between_nodes * dist
 		new_depth += 1
 
 	tree_node.parent = px
@@ -76,16 +56,11 @@ func add_node(tree_node:TreeNode) -> void:
 		else: 
 			px.right = tree_node
 	
-	# calculate the offset with a binary number. The created string is the binary number, for the 
-	# place that the node will receive in that layer. For example the binary number 0 would mean that
-	# the node is horizontaly, on the 1. place, either right or left. 
-	
-	tree_node.positions_list_no_line.append(convert_bin_to_pos(position_binary, left_subtree, vertical_offset))
+	tree_node.current_depth = new_depth
 	add_child(tree_node)
-	tree_node.move_to_right_position(1000)
 	if new_depth > tree_depth:
 		tree_depth = new_depth
-	update_positions(root, 0, false, 0)
+	update_positions()
 	
 	
 	# Get the current contents of the clipboard
@@ -94,53 +69,61 @@ func add_node(tree_node:TreeNode) -> void:
 	# DisplayServer.clipboard_set(str(root))
 	
 
-func convert_bin_to_pos(horizontal_place:int, left:bool, vertical_offset:float) -> Vector2:
-	return Vector2(((-1) if left else 1) * (self.horizonal_distance_between_nodes/2 + horizontal_place * self.horizonal_distance_between_nodes), vertical_offset)
+func update_positions() -> void:
+	var leafsLeft:Array = get_leafs_rec(root.left)
+	var leafsRight:Array = get_leafs_rec(root.right)
+	
+	for i in range(leafsLeft.size() - 1, -1, -1):
+		var newPos:Vector2 = Vector2((-1) * (self.horizonal_distance_between_nodes/2.0 - (i - leafsLeft.size()+1) * self.horizonal_distance_between_nodes), -200 + leafsLeft.get(i).current_depth * 150)
+		leafsLeft.get(i).target_position = newPos
+		leafsLeft.get(i).positions_list_with_line.append(newPos)
+	
+	for i in range(leafsRight.size()):
+		var newPos:Vector2 = Vector2(self.horizonal_distance_between_nodes/2.0 + i * self.horizonal_distance_between_nodes, -200 + leafsRight.get(i).current_depth * 150)
+		leafsRight.get(i).target_position = newPos
+		leafsRight.get(i).positions_list_with_line.append(newPos)
+	
+	update_all_pos(root.left, true)
+	update_all_pos(root.right, false)
 
-func update_positions(current:TreeNode, depth:int, left:bool, place:int) -> void:
-	if(depth == 0):
-		update_positions(current.left, 1, true, 0)
-		update_positions(current.right, 1, false, 0)
-		return
-	if(current == null):
-		return
-	if (depth >= tree_depth):
-		return
+func get_leafs_rec(x:TreeNode) -> Array:
+	if (x == null):
+		return []
+	if (x.left == null and x.right == null):
+		return [x]
+	var output:Array = [] 
+	if (x.left != null):
+		output.append_array(get_leafs_rec(x.left))
+	if (x.right != null):
+		output.append_array(get_leafs_rec(x.right))
+	return output
+
+
+func update_all_pos(x:TreeNode, left:bool) -> Vector2:
+	if(x == null):
+		return Vector2(0,0)
+	if(x.left == null and x.right == null):
+		if(not x.moving):
+			x.move_to_right_position(1000)
+		return x.target_position
 	
+	var child_left_horizontal = update_all_pos(x.left, left).x
+	var child_right_horizontal = update_all_pos(x.right, left).x
 	
-	var horizontal_dist_to_split = ((1 << (tree_depth-1))-1) * 150
-	var horizontal = ((-1) if left else 1) * (self.horizonal_distance_between_nodes/2 + horizontal_dist_to_split * ( ( (place*2)+1) / float(1<<depth) ) )
-	print(str(pow(2,depth)) + " - " + str(1 << depth))
-	var vertical = -200 + vertical_distance_between_nodes * depth
-	print(str(current.key) + " - " + str(place) + " - " + str(horizontal))
-	if current.moving:
-		current.positions_list_with_line.append(Vector2(horizontal , vertical))
+	if(x.left != null and x.right != null):
+		if (left):
+			x.target_position = Vector2(child_right_horizontal + (child_left_horizontal - child_right_horizontal)/2, -200 + 150*x.current_depth)
+		else:
+			x.target_position = Vector2(child_left_horizontal + (child_right_horizontal - child_left_horizontal)/2, -200 + 150*x.current_depth)
 	else:
-		current.positions_list_with_line.append(Vector2(horizontal, vertical))
-		current.move_to_right_position(1000)
+		x.target_position = Vector2(child_left_horizontal + child_right_horizontal, -200 + 150*x.current_depth)
+	x.positions_list_with_line.append(x.target_position)
 	
-	update_positions(current.left, depth + 1, left, (place << 1) + (1 if left else 0))
-	update_positions(current.right, depth + 1, left, (place << 1) + (0 if left else 1))
+	if(not x.moving):
+		x.move_to_right_position(1000)
+	return x.target_position
 	
-	
 
-
-# !!!!!!!!!!!!!!!!!!!!!!!!!!! IMPORTANT, IMPLEMENT NEXT !!!!!!!!!!!!!!!!!!!!!!!!!!!
-# ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ 
-
-
-func redraw_tree():
-	
-	var x:TreeNode = self.root
-	
-	redraw_tree_rec(x.left, 50, -50)
-	redraw_tree_rec(x.right, 50, 50)
-
-func redraw_tree_rec(x: TreeNode, vertical_offset:int, horizontal_offset: int):
-	pass
-
-
-# ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
 func delete_node(key:int) -> void:
 	search_node_return(key).delete_node()

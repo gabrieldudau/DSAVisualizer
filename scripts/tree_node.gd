@@ -15,6 +15,8 @@ var positions_list_with_line:Array
 
 var time:Timer = Timer.new()
 var moving:bool = false
+var target_position:Vector2
+var current_depth:int
 
 func _on_ready() -> void:
 	label.text = str(key)
