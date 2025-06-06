@@ -19,6 +19,10 @@ config/icon="res://icon.svg"
 
 GlobalSignal="*res://global_signal/global_signal.gd"
 
+[display]
+
+window/vsync/vsync_mode=0
+
 [dotnet]
 
 project/assembly_name="Bin_Tree_Visualizer"
