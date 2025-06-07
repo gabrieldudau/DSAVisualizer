@@ -95,10 +95,6 @@ func light_up_for_search():
 
 
 func delete_node():
-	if(key < parent.key):
-		parent.left = null
-	else:
-		parent.right = null
 	queue_free()
 
 

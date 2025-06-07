@@ -27,6 +27,10 @@ window/vsync/vsync_mode=0
 
 project/assembly_name="Bin_Tree_Visualizer"
 
+[editor]
+
+movie_writer/movie_file="/home/gabriel/godot/Projects/godot_binTreeVisualizer/videos/examle.avi"
+
 [input]
 
 leftMB={

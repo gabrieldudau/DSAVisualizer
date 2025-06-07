@@ -56,7 +56,6 @@ func add_node(tree_node:TreeNode) -> void:
 		else: 
 			px.right = tree_node
 	
-	tree_node.current_depth = new_depth
 	add_child(tree_node)
 	if new_depth > tree_depth:
 		tree_depth = new_depth
@@ -70,8 +69,10 @@ func add_node(tree_node:TreeNode) -> void:
 	
 
 func update_positions() -> void:
-	var leafsLeft:Array = get_leafs_rec(root.left)
-	var leafsRight:Array = get_leafs_rec(root.right)
+	if (root == null): return
+	root.current_depth = 0
+	var leafsLeft:Array = get_leafs_rec(root.left, 1)
+	var leafsRight:Array = get_leafs_rec(root.right, 1)
 	
 	for i in range(leafsLeft.size() - 1, -1, -1):
 		var newPos:Vector2 = Vector2((-1) * (self.horizonal_distance_between_nodes/2.0 - (i - leafsLeft.size()+1) * self.horizonal_distance_between_nodes), -200 + leafsLeft.get(i).current_depth * 150)
@@ -83,19 +84,27 @@ func update_positions() -> void:
 		leafsRight.get(i).target_position = newPos
 		leafsRight.get(i).positions_list_with_line.append(newPos)
 	
+	root.positions_list_no_line.append(Vector2(0,-200))
+	root.move_to_right_position(1000)
+	if(root.connection_line != null): root.connection_line.queue_free()
+	
 	update_all_pos(root.left, true)
 	update_all_pos(root.right, false)
 
-func get_leafs_rec(x:TreeNode) -> Array:
+## Returns all the leafs of a current TreeNode, and also updates the 
+## attribute [param current_depth] of TreeNode 
+func get_leafs_rec(x:TreeNode, depth:int) -> Array:
+
 	if (x == null):
 		return []
+	x.current_depth = depth
 	if (x.left == null and x.right == null):
 		return [x]
 	var output:Array = [] 
 	if (x.left != null):
-		output.append_array(get_leafs_rec(x.left))
+		output.append_array(get_leafs_rec(x.left, depth + 1))
 	if (x.right != null):
-		output.append_array(get_leafs_rec(x.right))
+		output.append_array(get_leafs_rec(x.right, depth + 1))
 	return output
 
 
@@ -122,13 +131,45 @@ func update_all_pos(x:TreeNode, left:bool) -> Vector2:
 	if(not x.moving):
 		x.move_to_right_position(1000)
 	return x.target_position
-	
 
 
 func delete_node(key:int) -> void:
-	search_node_return(key).delete_node()
-	print("deleted")
+	var z:TreeNode = search_node_return(key)
+	if (z == null): return
+	# Algorithmus aus AuD
+	if (z.left == null):
+		transplant(z, z.right)
+	else:
+		if (z.right == null):
+			transplant(z, z.left)
+		else:
+			var y = z.right
+			while(y.left != null):
+				y = y.left
+			if(y.parent != z):
+				transplant(y, y.right)
+				y.right = z.right
+				y.right.parent = y
+			transplant(z, y)
+			y.left = z.left
+			y.left.parent = y
 	print(root)
+	update_positions()
+	z.queue_free()
+	
+
+
+
+func transplant(u:TreeNode, v:TreeNode):
+	if(u.parent == null):
+		root = v
+	elif (u == u.parent.left):
+		u.parent.left = v
+	else:
+		u.parent.right = v
+	if(v != null):
+		v.parent = u.parent
+
 
 func search_node(key:int) -> void:
 	var x = root
@@ -152,7 +193,7 @@ func search_node_return(key:int) -> TreeNode:
 
 # add random nodes, to have a quick visualisation of how a bin_tree works
 func _on_button_pressed() -> void:
-	var keys:Array = [32, 16, 48, 8, 24, 40, 56, 4, 12, 20, 28, 36, 44, 52, 60, 2, 6, 10, 14, 18, 22, 26, 30, 34, 38, 42, 46, 50, 54, 58, 62, 1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39, 41, 43, 45, 47, 49, 51, 53, 55, 57, 59, 61, 63]
+	var keys:Array = [32, 16, 48, 8, 24, 40, 56, 4, 12, 20, 28, 36, 44, 52, 60, 2, 6, 10, 14, 18, 22, 26, 30, 34, 38, 42, 46, 50, 54, 58, 62]
 	
 	for key in keys:
 		var node = TREE_NODE.instantiate()
