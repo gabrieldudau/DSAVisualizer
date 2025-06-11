@@ -1,10 +1,12 @@
 extends Node2D
 
-@export var horizonal_distance_between_nodes = 150
-@export var vertical_distance_between_nodes = 150
+@export var horizonal_distance_between_nodes:float = 150
+@export var vertical_distance_between_nodes:float = 200
+@export var root_position:Vector2 = Vector2(0, -200)
+@export var animation_speed:int = 1000
 
 var root:TreeNode
-const TREE_NODE = preload("res://scenes/tree_node.tscn")
+const TREE_NODE = preload("res://scenes/Datenstrukturen/tree_node.tscn")
 var tree_depth:int = 0
 
 func _on_tree_entered() -> void:
@@ -33,21 +35,21 @@ func add_node(tree_node:TreeNode) -> void:
 			# logic for placement of graphical nodes
 			if left_subtree == null:
 				left_subtree = true
-				tree_node.positions_list_no_line.append(Vector2(-150, -200))
+				tree_node.positions_list_no_line.append(root_position)
 		else:
 			# actual logic
 			x=x.right
 			# logic for placement of graphical nodes
 			if left_subtree == null:
 				left_subtree = false
-				tree_node.positions_list_no_line.append(Vector2(150, -200))
+				tree_node.positions_list_no_line.append(root_position)
 		new_depth += 1
 
 	tree_node.parent = px
 	if px == null:
 		root = tree_node
 		# position of root
-		tree_node.position = Vector2(0, -200)
+		tree_node.position = root_position
 		add_child(tree_node)
 		return
 	else:
@@ -75,17 +77,17 @@ func update_positions() -> void:
 	var leafsRight:Array = get_leafs_rec(root.right, 1)
 	
 	for i in range(leafsLeft.size() - 1, -1, -1):
-		var newPos:Vector2 = Vector2((-1) * (self.horizonal_distance_between_nodes/2.0 - (i - leafsLeft.size()+1) * self.horizonal_distance_between_nodes), -200 + leafsLeft.get(i).current_depth * 150)
+		var newPos:Vector2 = Vector2((-1) * (self.horizonal_distance_between_nodes/2.0 - (i - leafsLeft.size()+1) * self.horizonal_distance_between_nodes), root_position.y + leafsLeft.get(i).current_depth * self.vertical_distance_between_nodes)
 		leafsLeft.get(i).target_position = newPos
 		leafsLeft.get(i).positions_list_with_line.append(newPos)
 	
 	for i in range(leafsRight.size()):
-		var newPos:Vector2 = Vector2(self.horizonal_distance_between_nodes/2.0 + i * self.horizonal_distance_between_nodes, -200 + leafsRight.get(i).current_depth * 150)
+		var newPos:Vector2 = Vector2(self.horizonal_distance_between_nodes/2.0 + i * self.horizonal_distance_between_nodes, root_position.y + leafsRight.get(i).current_depth * self.vertical_distance_between_nodes)
 		leafsRight.get(i).target_position = newPos
 		leafsRight.get(i).positions_list_with_line.append(newPos)
 	
-	root.positions_list_no_line.append(Vector2(0,-200))
-	root.move_to_right_position(1000)
+	root.positions_list_no_line.append(root_position)
+	root.move_to_right_position(animation_speed)
 	if(root.connection_line != null): root.connection_line.queue_free()
 	
 	update_all_pos(root.left, true)
@@ -113,7 +115,7 @@ func update_all_pos(x:TreeNode, left:bool) -> Vector2:
 		return Vector2(0,0)
 	if(x.left == null and x.right == null):
 		if(not x.moving):
-			x.move_to_right_position(1000)
+			x.move_to_right_position(animation_speed)
 		return x.target_position
 	
 	var child_left_horizontal = update_all_pos(x.left, left).x
@@ -121,15 +123,15 @@ func update_all_pos(x:TreeNode, left:bool) -> Vector2:
 	
 	if(x.left != null and x.right != null):
 		if (left):
-			x.target_position = Vector2(child_right_horizontal + (child_left_horizontal - child_right_horizontal)/2, -200 + 150*x.current_depth)
+			x.target_position = Vector2(child_right_horizontal + (child_left_horizontal - child_right_horizontal)/2, root_position.y + vertical_distance_between_nodes*x.current_depth)
 		else:
-			x.target_position = Vector2(child_left_horizontal + (child_right_horizontal - child_left_horizontal)/2, -200 + 150*x.current_depth)
+			x.target_position = Vector2(child_left_horizontal + (child_right_horizontal - child_left_horizontal)/2, root_position.y + vertical_distance_between_nodes*x.current_depth)
 	else:
-		x.target_position = Vector2(child_left_horizontal + child_right_horizontal, -200 + 150*x.current_depth)
+		x.target_position = Vector2(child_left_horizontal + child_right_horizontal, root_position.y + vertical_distance_between_nodes*x.current_depth)
 	x.positions_list_with_line.append(x.target_position)
 	
 	if(not x.moving):
-		x.move_to_right_position(1000)
+		x.move_to_right_position(animation_speed)
 	return x.target_position
 
 
@@ -156,8 +158,6 @@ func delete_node(key:int) -> void:
 	print(root)
 	update_positions()
 	z.queue_free()
-	
-
 
 
 func transplant(u:TreeNode, v:TreeNode):

@@ -1,14 +1,14 @@
 [gd_scene load_steps=7 format=3 uid="uid://d2xh40qn3a1ii"]
 
-[ext_resource type="Script" uid="uid://77p6d5dnv1pd" path="res://scripts/game_controler.gd" id="1_o5qli"]
-[ext_resource type="Script" uid="uid://b0t6b0yx088o8" path="res://scripts/tree_node_input.gd" id="3_sugp2"]
-[ext_resource type="FontFile" uid="uid://bwnejgghmtjhc" path="res://assets/fonts/pixeloid-font/PixeloidMono-d94EV.ttf" id="3_tbgi4"]
-[ext_resource type="Script" uid="uid://cny6u56owmp3m" path="res://scripts/bin_tree_handler.gd" id="4_jyhfs"]
-[ext_resource type="Script" uid="uid://dl3an2ounkmqq" path="res://scripts/search_node.gd" id="4_tbgi4"]
-[ext_resource type="Script" uid="uid://dkj05jrqep25n" path="res://scripts/delete_node.gd" id="5_tefeu"]
+[ext_resource type="Script" uid="uid://77p6d5dnv1pd" path="res://scripts/UI/game_controler.gd" id="1_7iy0d"]
+[ext_resource type="FontFile" uid="uid://bwnejgghmtjhc" path="res://assets/fonts/pixeloid-font/PixeloidMono-d94EV.ttf" id="2_cktjq"]
+[ext_resource type="Script" uid="uid://b0t6b0yx088o8" path="res://scripts/Datenstrukturen/Binary search tree/tree_node_input.gd" id="3_e20di"]
+[ext_resource type="Script" uid="uid://dl3an2ounkmqq" path="res://scripts/Datenstrukturen/Binary search tree/search_node.gd" id="4_h0x2o"]
+[ext_resource type="Script" uid="uid://dkj05jrqep25n" path="res://scripts/Datenstrukturen/Binary search tree/delete_node.gd" id="5_j3py5"]
+[ext_resource type="PackedScene" uid="uid://rixubl3m14b2" path="res://scenes/Datenstrukturen/bin_search_tree.tscn" id="6_rpu0i"]
 
 [node name="GameControler" type="Node2D"]
-script = ExtResource("1_o5qli")
+script = ExtResource("1_7iy0d")
 
 [node name="Control" type="CanvasLayer" parent="."]
 
@@ -17,30 +17,30 @@ offset_left = 5.0
 offset_top = 4.0
 offset_right = 193.0
 offset_bottom = 40.0
-theme_override_fonts/font = ExtResource("3_tbgi4")
+theme_override_fonts/font = ExtResource("2_cktjq")
 theme_override_font_sizes/font_size = 18
 placeholder_text = "Add Node..."
-script = ExtResource("3_sugp2")
+script = ExtResource("3_e20di")
 
 [node name="TextEdit2" type="TextEdit" parent="Control"]
 offset_left = 5.0
 offset_top = 40.0
 offset_right = 193.0
 offset_bottom = 76.0
-theme_override_fonts/font = ExtResource("3_tbgi4")
+theme_override_fonts/font = ExtResource("2_cktjq")
 theme_override_font_sizes/font_size = 18
 placeholder_text = "Search Node..."
-script = ExtResource("4_tbgi4")
+script = ExtResource("4_h0x2o")
 
 [node name="TextEdit3" type="TextEdit" parent="Control"]
 offset_left = 5.0
 offset_top = 76.0
 offset_right = 193.0
 offset_bottom = 112.0
-theme_override_fonts/font = ExtResource("3_tbgi4")
+theme_override_fonts/font = ExtResource("2_cktjq")
 theme_override_font_sizes/font_size = 18
 placeholder_text = "Delete Node..."
-script = ExtResource("5_tefeu")
+script = ExtResource("5_j3py5")
 
 [node name="Label" type="Label" parent="Control"]
 anchors_preset = -1
@@ -51,7 +51,7 @@ offset_top = 10.0
 offset_right = 23.912
 offset_bottom = 33.0
 grow_horizontal = 2
-theme_override_fonts/font = ExtResource("3_tbgi4")
+theme_override_fonts/font = ExtResource("2_cktjq")
 theme_override_font_sizes/font_size = 18
 text = "MOVE"
 
@@ -65,7 +65,7 @@ offset_right = -39.0
 offset_bottom = 34.0
 grow_horizontal = 2
 scale = Vector2(1.2, 1.2)
-theme_override_fonts/font = ExtResource("3_tbgi4")
+theme_override_fonts/font = ExtResource("2_cktjq")
 theme_override_font_sizes/font_size = 9
 text = "Press the right mouse button
 to change the mode"
@@ -77,18 +77,14 @@ offset_left = 5.0
 offset_top = 112.0
 offset_right = 205.0
 offset_bottom = 148.0
-theme_override_fonts/font = ExtResource("3_tbgi4")
+theme_override_fonts/font = ExtResource("2_cktjq")
 theme_override_font_sizes/font_size = 18
 text = "Add random Nodes"
 
 [node name="Camera2D" type="Camera2D" parent="."]
 
-[node name="TreeNodes" type="Node2D" parent="."]
-script = ExtResource("4_jyhfs")
+[node name="BinarySearchTree" parent="." instance=ExtResource("6_rpu0i")]
 
 [connection signal="text_changed" from="Control/TextEdit" to="Control/TextEdit" method="_on_text_changed"]
 [connection signal="text_changed" from="Control/TextEdit2" to="Control/TextEdit2" method="_on_text_changed"]
 [connection signal="text_changed" from="Control/TextEdit3" to="Control/TextEdit3" method="_on_text_changed"]
-[connection signal="pressed" from="Control/Button" to="TreeNodes" method="_on_button_pressed"]
-[connection signal="tree_entered" from="TreeNodes" to="TreeNodes" method="_on_tree_entered"]
-[connection signal="tree_exiting" from="TreeNodes" to="TreeNodes" method="_on_tree_exiting"]

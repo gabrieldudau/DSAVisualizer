@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://rixubl3m14b2"]
+
+[ext_resource type="Script" uid="uid://cny6u56owmp3m" path="res://scripts/Datenstrukturen/Binary search tree/bin_tree_handler.gd" id="1_d157q"]
+
+[node name="BinarySearchTree" type="Node2D"]
+script = ExtResource("1_d157q")
+
+[connection signal="tree_entered" from="." to="." method="_on_tree_entered"]
+[connection signal="tree_exiting" from="." to="." method="_on_tree_exiting"]

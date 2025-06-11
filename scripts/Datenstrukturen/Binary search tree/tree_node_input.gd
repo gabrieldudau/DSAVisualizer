@@ -1,6 +1,6 @@
 extends TextEdit
 
-const TREE_NODE = preload("res://scenes/tree_node.tscn")
+const TREE_NODE = preload("res://scenes/Datenstrukturen/tree_node.tscn")
 
 func _on_text_changed() -> void:
 	if(text.contains( "\n")):
@@ -9,6 +9,8 @@ func _on_text_changed() -> void:
 			text = ""
 			print("wrong input")
 			return
-		var key = int(input)
+		var treeNode = TREE_NODE.instantiate()
+		treeNode.key = int(input)
 		text = ""
-		GlobalSignal.deleteNode.emit(key)
+		GlobalSignal.newNode.emit(treeNode)
+		
