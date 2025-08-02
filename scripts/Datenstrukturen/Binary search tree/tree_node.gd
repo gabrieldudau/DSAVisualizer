@@ -2,8 +2,9 @@ class_name TreeNode
 extends Node2D
 
 @onready var label: Label = $Label
-@onready var weiß: Sprite2D = $weiß
-@onready var gelb: Sprite2D = $gelb
+@onready var circle_sprite: Sprite2D = $Sprite2D
+
+var current_color:Color
 
 var left:TreeNode
 var right:TreeNode
@@ -20,8 +21,9 @@ var current_depth:int
 
 func _on_ready() -> void:
 	label.text = str(key)
-	gelb.hide()
-	weiß.show()
+	
+	current_color = Color.WHITE
+	
 	add_child(time)
 
 func connect_line():
@@ -82,14 +84,19 @@ func move_to_right_position(speed) -> void:
 
 
 func light_up_for_search():
-	weiß.hide()
-	gelb.show()
+	
+	current_color = Color.YELLOW
+	queue_redraw()
+	
 	if connection_line != null:
 		connection_line.default_color = Color.ORANGE_RED
 	time.start(3)
 	await time.timeout
-	weiß.show()
-	gelb.hide()
+	
+	current_color = Color.WHITE
+	queue_redraw()
+	
+	
 	if connection_line != null:
 		connection_line.default_color = Color.BLACK
 
@@ -107,3 +114,7 @@ func rec_tree_String(x: TreeNode, tab:String) -> String:
 		return "" 
 	var ownLine:String = tab + ">" + str(x.key) + "\n"
 	return rec_tree_String(x.right, tab + "-----") + ownLine + rec_tree_String(x.left, tab + "-----")
+
+
+func _on_draw() -> void:
+	draw_circle(Vector2(0,0), (circle_sprite.texture.get_width() * circle_sprite.transform.get_scale().x)/2 - 3, current_color)

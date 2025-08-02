@@ -155,7 +155,6 @@ func delete_node(key:int) -> void:
 			transplant(z, y)
 			y.left = z.left
 			y.left.parent = y
-	print(root)
 	update_positions()
 	z.queue_free()
 

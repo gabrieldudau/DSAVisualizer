@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bnsih10mmuavm"]
+
+[ext_resource type="Script" uid="uid://xfa4kch0pvnl" path="res://scripts/Datenstrukturen/Sorting List/list.gd" id="1_2mmxc"]
+
+[node name="List" type="Node2D"]
+script = ExtResource("1_2mmxc")

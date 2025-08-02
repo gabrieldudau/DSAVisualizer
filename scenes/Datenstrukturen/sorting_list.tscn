@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://ccp6lxv0rpyok"]
+
+[ext_resource type="PackedScene" uid="uid://bnsih10mmuavm" path="res://scenes/Datenstrukturen/list.tscn" id="1_vw0k0"]
+[ext_resource type="FontFile" uid="uid://by0uwwuifrqdx" path="res://assets/fonts/pixeloid-font/PixeloidSans-mLxMm.ttf" id="2_01j2t"]
+[ext_resource type="Script" uid="uid://c7uwgohots74j" path="res://scripts/UI/new_item_temp.gd" id="3_ddvfb"]
+
+[node name="SceneControler" type="Node2D"]
+
+[node name="List" parent="." instance=ExtResource("1_vw0k0")]
+position = Vector2(50, 200)
+
+[node name="TextEdit" type="TextEdit" parent="."]
+offset_right = 136.0
+offset_bottom = 36.0
+theme_override_fonts/font = ExtResource("2_01j2t")
+theme_override_font_sizes/font_size = 18
+placeholder_text = "new Node..."
+script = ExtResource("3_ddvfb")
+
+[connection signal="text_changed" from="TextEdit" to="TextEdit" method="_on_text_changed"]

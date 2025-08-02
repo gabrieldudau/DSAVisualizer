@@ -1,20 +1,15 @@
-[gd_scene load_steps=5 format=3 uid="uid://de1b000tl1sex"]
+[gd_scene load_steps=4 format=3 uid="uid://de1b000tl1sex"]
 
 [ext_resource type="Script" uid="uid://c8etbgdvmoheq" path="res://scripts/Datenstrukturen/Binary search tree/tree_node.gd" id="1_cg6pj"]
-[ext_resource type="Texture2D" uid="uid://c2bcktfssxxt0" path="res://assets/Kreis_weiß.png" id="2_6jpsy"]
-[ext_resource type="Texture2D" uid="uid://cgey5c2r6iyad" path="res://assets/Kreis_gelb.png" id="3_vruev"]
+[ext_resource type="Texture2D" uid="uid://bdf7kw18vqi5m" path="res://assets/Kreis.png" id="2_cppjf"]
 [ext_resource type="FontFile" uid="uid://bwnejgghmtjhc" path="res://assets/fonts/pixeloid-font/PixeloidMono-d94EV.ttf" id="4_n3e34"]
 
 [node name="TreeNode" type="Node2D"]
 script = ExtResource("1_cg6pj")
 
-[node name="weiß" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(2, 2)
-texture = ExtResource("2_6jpsy")
-
-[node name="gelb" type="Sprite2D" parent="."]
-scale = Vector2(2, 2)
-texture = ExtResource("3_vruev")
+texture = ExtResource("2_cppjf")
 
 [node name="Label" type="Label" parent="."]
 offset_left = -50.0
@@ -30,4 +25,5 @@ vertical_alignment = 1
 clip_text = true
 metadata/_edit_use_anchors_ = true
 
+[connection signal="draw" from="." to="." method="_on_draw"]
 [connection signal="ready" from="." to="." method="_on_ready"]
