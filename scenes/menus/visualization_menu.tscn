@@ -1,0 +1,40 @@
+[gd_scene load_steps=2 format=3 uid="uid://bbatjoqgbgg47"]
+
+[ext_resource type="Script" uid="uid://bt21cif2e3j3g" path="res://scripts/UI/visualization_button_func.gd" id="1_toq8p"]
+
+[node name="visualization_menu" type="CanvasLayer"]
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_right = 20.0
+offset_bottom = 40.0
+grow_horizontal = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_right = 30
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 30
+script = ExtResource("1_toq8p")
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Visualisierungen"
+horizontal_alignment = 1
+
+[node name="BSTScene" type="Button" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Binary Search Tree"
+
+[node name="Button" type="Button" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Linked List"
+
+[connection signal="pressed" from="MarginContainer/VBoxContainer/BSTScene" to="MarginContainer/VBoxContainer" method="_on_bst_scene_pressed"]

@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://d2xh40qn3a1ii"]
 
-[ext_resource type="Script" uid="uid://77p6d5dnv1pd" path="res://scripts/UI/game_controler.gd" id="1_7iy0d"]
+[ext_resource type="Script" uid="uid://77p6d5dnv1pd" path="res://scripts/UI/camera_controler.gd" id="1_7iy0d"]
 [ext_resource type="FontFile" uid="uid://bwnejgghmtjhc" path="res://assets/fonts/pixeloid-font/PixeloidMono-d94EV.ttf" id="2_cktjq"]
 [ext_resource type="Script" uid="uid://b0t6b0yx088o8" path="res://scripts/Datenstrukturen/Binary search tree/tree_node_input.gd" id="3_e20di"]
 [ext_resource type="Script" uid="uid://dl3an2ounkmqq" path="res://scripts/Datenstrukturen/Binary search tree/search_node.gd" id="4_h0x2o"]
@@ -42,33 +42,20 @@ theme_override_font_sizes/font_size = 18
 placeholder_text = "Delete Node..."
 script = ExtResource("5_j3py5")
 
-[node name="Label" type="Label" parent="Control"]
-anchors_preset = -1
-anchor_left = 0.494
-anchor_right = 0.494
-offset_left = -24.088
-offset_top = 10.0
-offset_right = 23.912
-offset_bottom = 33.0
-grow_horizontal = 2
-theme_override_fonts/font = ExtResource("2_cktjq")
-theme_override_font_sizes/font_size = 18
-text = "MOVE"
-
 [node name="Label2" type="Label" parent="Control"]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -207.0
+offset_left = -130.0
 offset_top = 5.0
-offset_right = -39.0
+offset_right = -26.0
 offset_bottom = 34.0
-grow_horizontal = 2
+grow_horizontal = 0
 scale = Vector2(1.2, 1.2)
 theme_override_fonts/font = ExtResource("2_cktjq")
 theme_override_font_sizes/font_size = 9
-text = "Press the right mouse button
-to change the mode"
+text = "Scroll to zoom
+Drag to move"
 horizontal_alignment = 1
 vertical_alignment = 1
 

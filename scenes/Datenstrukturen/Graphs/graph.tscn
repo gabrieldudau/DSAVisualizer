@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://cg1wscoosapl7"]
+
+[ext_resource type="Script" uid="uid://d08eq34ulckn6" path="res://scripts/Datenstrukturen/Graphs/graph_controller.gd" id="1_kle65"]
+
+[node name="Graph" type="Node2D"]
+script = ExtResource("1_kle65")
+
+[connection signal="child_entered_tree" from="." to="." method="_on_child_entered_tree"]
