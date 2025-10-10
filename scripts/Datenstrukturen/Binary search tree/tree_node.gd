@@ -1,15 +1,22 @@
 class_name TreeNode
 extends Node2D
 
-@onready var label: Label = $Label
-@onready var circle_sprite: Sprite2D = $Sprite2D
+
+const GRAPHICAL_NODE = preload("res://scenes/Universal/graphical_node.tscn")
+
+# Variables for the graphic representation of the node
 
 var current_color:Color
+var radius: float = 60
+var key: int = 15
+var fontsize:int = 36
+
+
+# Variables for the tree logic
 
 var left:TreeNode
 var right:TreeNode
 var parent:TreeNode
-var key: int
 var connection_line:Line2D
 var positions_list_no_line:Array
 var positions_list_with_line:Array
@@ -20,10 +27,12 @@ var target_position:Vector2
 var current_depth:int
 
 func _on_ready() -> void:
-	label.text = str(key)
-	
-	current_color = Color.WHITE
-	
+	var graphical_node = GRAPHICAL_NODE.instantiate()
+	graphical_node.key = str(key)
+	graphical_node.color = Color.WHITE
+	graphical_node.radius = radius
+	graphical_node.fontsize = self.fontsize
+	add_child(graphical_node)
 	add_child(time)
 
 func connect_line():
@@ -114,7 +123,3 @@ func rec_tree_String(x: TreeNode, tab:String) -> String:
 		return "" 
 	var ownLine:String = tab + ">" + str(x.key) + "\n"
 	return rec_tree_String(x.right, tab + "-----") + ownLine + rec_tree_String(x.left, tab + "-----")
-
-
-func _on_draw() -> void:
-	draw_circle(Vector2(0,0), (circle_sprite.texture.get_width() * circle_sprite.transform.get_scale().x)/2 - 3, current_color)

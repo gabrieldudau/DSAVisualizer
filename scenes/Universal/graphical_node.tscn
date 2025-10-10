@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=3 uid="uid://csywo1wr0bpt8"]
+
+[ext_resource type="Script" uid="uid://dv5vqajptpqqg" path="res://scripts/Universal/graphical_node.gd" id="1_paiad"]
+[ext_resource type="FontFile" uid="uid://bwnejgghmtjhc" path="res://assets/fonts/pixeloid-font/PixeloidMono-d94EV.ttf" id="2_0b5p3"]
+
+[node name="graphical_node" type="Node2D"]
+script = ExtResource("1_paiad")
+
+[node name="Label" type="Label" parent="."]
+offset_left = -50.0
+offset_top = -30.0
+offset_right = 50.0
+offset_bottom = 30.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_0b5p3")
+theme_override_font_sizes/font_size = 36
+text = "NODE"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+metadata/_edit_use_anchors_ = true
+
+[connection signal="draw" from="." to="." method="_on_draw"]

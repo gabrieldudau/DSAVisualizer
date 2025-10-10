@@ -6,10 +6,6 @@
 [node name="TestGraphScene" type="Node2D"]
 script = ExtResource("1_te3bl")
 
-[node name="ClickTimer" type="Timer" parent="."]
-wait_time = 0.4
-one_shot = true
-
 [node name="Camera2D" type="Camera2D" parent="."]
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
@@ -31,8 +27,6 @@ text = "camera toggle"
 
 [node name="HSlider" type="HSlider" parent="CanvasLayer/VBoxContainer"]
 layout_mode = 2
-max_value = 30.0
-step = 0.1
 
 [node name="Graph" parent="." instance=ExtResource("2_84lfc")]
 

@@ -1,4 +1,5 @@
 extends Node
+class_name SceneMover
 
 ## --- Referenzen ---
 @onready var camera: Camera2D = $"Camera2D"
@@ -12,6 +13,7 @@ extends Node
 ## --- Interne Variablen ---
 var is_panning: bool = false
 var target_zoom: Vector2
+var moveable = true
 
 func _ready() -> void:
 	camera.position = Vector2(0, 150)
@@ -33,7 +35,7 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_released("leftMB"):
 		is_panning = false
 
-	if event is InputEventMouseMotion and is_panning:
+	if event is InputEventMouseMotion and is_panning and moveable:
 		move_camera(event.relative)
 
 func update_target_zoom(direction: int):

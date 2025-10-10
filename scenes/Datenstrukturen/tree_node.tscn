@@ -1,29 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://de1b000tl1sex"]
+[gd_scene load_steps=2 format=3 uid="uid://de1b000tl1sex"]
 
 [ext_resource type="Script" uid="uid://c8etbgdvmoheq" path="res://scripts/Datenstrukturen/Binary search tree/tree_node.gd" id="1_cg6pj"]
-[ext_resource type="Texture2D" uid="uid://bdf7kw18vqi5m" path="res://assets/Kreis.png" id="2_cppjf"]
-[ext_resource type="FontFile" uid="uid://bwnejgghmtjhc" path="res://assets/fonts/pixeloid-font/PixeloidMono-d94EV.ttf" id="4_n3e34"]
 
 [node name="TreeNode" type="Node2D"]
 script = ExtResource("1_cg6pj")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-scale = Vector2(2, 2)
-texture = ExtResource("2_cppjf")
-
-[node name="Label" type="Label" parent="."]
-offset_left = -50.0
-offset_top = -30.0
-offset_right = 50.0
-offset_bottom = 30.0
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_fonts/font = ExtResource("4_n3e34")
-theme_override_font_sizes/font_size = 36
-text = "NODE"
-horizontal_alignment = 1
-vertical_alignment = 1
-clip_text = true
-metadata/_edit_use_anchors_ = true
-
-[connection signal="draw" from="." to="." method="_on_draw"]
 [connection signal="ready" from="." to="." method="_on_ready"]

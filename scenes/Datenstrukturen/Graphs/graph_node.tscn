@@ -1,9 +1,9 @@
 [gd_scene load_steps=3 format=3 uid="uid://gjdtpxixj6kn"]
 
-[ext_resource type="PackedScene" uid="uid://de1b000tl1sex" path="res://scenes/Datenstrukturen/tree_node.tscn" id="1_ydlaf"]
+[ext_resource type="PackedScene" uid="uid://csywo1wr0bpt8" path="res://scenes/Universal/graphical_node.tscn" id="1_ydlaf"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_g4c53"]
-radius = 61.131
+radius = 60.0
 
 [node name="Node2D" type="RigidBody2D" groups=["celestial_bodies"]]
 gravity_scale = 0.0
@@ -12,4 +12,8 @@ lock_rotation = true
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_g4c53")
 
-[node name="TreeNode" parent="." instance=ExtResource("1_ydlaf")]
+[node name="graphical_node" parent="." instance=ExtResource("1_ydlaf")]
+key = "0"
+color = Color(0.66176, 0.480932, 0.311762, 1)
+radius = 50.0
+fontsize = 36
