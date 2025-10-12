@@ -2,15 +2,15 @@ class_name TreeNode
 extends Node2D
 
 
-const GRAPHICAL_NODE = preload("res://scenes/Universal/graphical_node.tscn")
+const GRAPHICAL_NODE = preload("res://scenes/Universal/universal_node.tscn")
 
 # Variables for the graphic representation of the node
 
 var current_color:Color
 var radius: float = 60
 var key: int = 15
-var fontsize:int = 36
-
+var fontsize:float = 36
+var drawNode:UniversalNode
 
 # Variables for the tree logic
 
@@ -27,12 +27,12 @@ var target_position:Vector2
 var current_depth:int
 
 func _on_ready() -> void:
-	var graphical_node = GRAPHICAL_NODE.instantiate()
-	graphical_node.key = str(key)
-	graphical_node.color = Color.WHITE
-	graphical_node.radius = radius
-	graphical_node.fontsize = self.fontsize
-	add_child(graphical_node)
+	drawNode = GRAPHICAL_NODE.instantiate()
+	drawNode.key = key
+	drawNode.color = Color.WHITE
+	drawNode.radius = radius
+	drawNode.fontSize = self.fontsize
+	add_child(drawNode)
 	add_child(time)
 
 func connect_line():
@@ -94,16 +94,16 @@ func move_to_right_position(speed) -> void:
 
 func light_up_for_search():
 	
-	current_color = Color.YELLOW
-	queue_redraw()
+	drawNode.color = Color.YELLOW
+	drawNode.queue_redraw()
 	
 	if connection_line != null:
 		connection_line.default_color = Color.ORANGE_RED
 	time.start(3)
 	await time.timeout
 	
-	current_color = Color.WHITE
-	queue_redraw()
+	drawNode.color = Color.WHITE
+	drawNode.queue_redraw()
 	
 	
 	if connection_line != null:

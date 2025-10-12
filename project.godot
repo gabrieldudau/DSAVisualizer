@@ -25,7 +25,7 @@ project/assembly_name="Bin_Tree_Visualizer"
 
 [editor]
 
-movie_writer/movie_file="/home/gabriel/godot/Projects/godot_binTreeVisualizer/videos/examle.avi"
+movie_writer/movie_file="X:/GDot/Projects/bin_tree_visualizer/video/examle.avi"
 
 [input]
 

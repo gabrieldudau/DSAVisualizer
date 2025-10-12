@@ -12,6 +12,7 @@ public partial class GraphController : Node2D
     private const string BODY_GROUP = "celestial_bodies";
     [Export] public float center_stiffness = 10.0f;
     [Export] public float damping_factor = 8.0f;
+    [Export] public float repulsion_force = 10;
 
     private LinkedList<RigidBody2D> childTouched = new LinkedList<RigidBody2D>();
     private RigidBody2D childMoving = null;
@@ -40,7 +41,7 @@ public partial class GraphController : Node2D
     {
         spring1 = null;
         if (childTouched.Count == 0) return;
-        
+
         // FIX: The logic was reversed and would cause a crash.
         // This now correctly matches the GDScript version.
         if (childMoving == null)
@@ -58,28 +59,23 @@ public partial class GraphController : Node2D
     public void add_spring()
     {
         if (spring1 == null || childTouched.Count == 0 || spring1 == childTouched.First.Value) return;
-        
-        // Create the entry if it doesn't exist.
+
         if (!springs_dict.ContainsKey(spring1))
         {
             springs_dict[spring1] = new HashSet<RigidBody2D>();
         }
 
-        // Check if the connection already exists.
-        // FIX: Use .Add() for HashSet, not .Append(). And check for existence before adding.
         if (springs_dict[spring1].Contains(childTouched.First.Value))
         {
             return;
         }
-        
         springs_dict[spring1].Add(childTouched.First.Value);
 
-        // --- Handle the reverse connection ---
+
         if (!springs_dict.ContainsKey(childTouched.First.Value))
         {
             springs_dict[childTouched.First.Value] = new HashSet<RigidBody2D>();
         }
-        // FIX: Use .Add() here as well.
         springs_dict[childTouched.First.Value].Add(spring1);
 
         DampedSpringJoint2D newSpring = new DampedSpringJoint2D();
@@ -91,6 +87,7 @@ public partial class GraphController : Node2D
 
     public void create_new_node(int posX, int posY, string text)
     {
+        GD.Print("received");
         RigidBody2D createNode = NODE_CLASS.Instantiate<RigidBody2D>();
         createNode.Position = new Godot.Vector2(posX, posY);
         AddChild(createNode);
@@ -99,9 +96,8 @@ public partial class GraphController : Node2D
     public override void _PhysicsProcess(double delta)
     {
         // FIX: base._PhysicsProcess(delta) is not needed as Node2D has no implementation for it.
-        
         var bodies = GetTree().GetNodesInGroup(BODY_GROUP);
-        
+
         var camera = GetViewport().GetCamera2D();
         Vector2 screenCenter = camera != null ? camera.GetScreenCenterPosition() : GetViewportRect().Size / 2;
 
@@ -110,7 +106,7 @@ public partial class GraphController : Node2D
             childMoving.Position = GetGlobalMousePosition();
         }
 
-        foreach (Node body in bodies)
+        foreach (RigidBody2D body in bodies)
         {
             if (body == childMoving)
             {
@@ -120,7 +116,7 @@ public partial class GraphController : Node2D
             if (body is RigidBody2D rigidBody)
             {
                 Vector2 toCenterVector = screenCenter - rigidBody.GlobalPosition;
-                
+
                 // Attraction Force
                 Vector2 attractionForce = toCenterVector * center_stiffness;
                 rigidBody.ApplyCentralForce(attractionForce);
@@ -128,6 +124,33 @@ public partial class GraphController : Node2D
                 // Damping Force
                 Vector2 dragForce = -rigidBody.LinearVelocity * damping_factor;
                 rigidBody.ApplyCentralForce(dragForce);
+            }
+        }
+        for (int i = 0; i < bodies.Count; i++)
+        {
+
+            // Start the inner loop from 'i + 1' to avoid duplicate pairs and self-comparisons.
+            for (int j = i + 1; j < bodies.Count; j++)
+            {
+                if (bodies[i] is RigidBody2D bodyA && bodies[j] is RigidBody2D bodyB)
+                {
+                    Vector2 vectorBetween = bodyB.GlobalPosition - bodyA.GlobalPosition;
+                    float distance = vectorBetween.Length();
+
+                    if (distance < 1) // Using 1 pixel as a minimum distance squared
+                    {
+                        distance = 1;
+                    }
+
+                    // The force that pushes the nodes apart. 
+                    float forceMagnitude = (repulsion_force * 10000) / distance;
+                    Vector2 forceVector = vectorBetween.Normalized() * forceMagnitude;
+
+                    if (childMoving != bodyA)
+                        bodyA.ApplyCentralForce(-forceVector);
+                    if(childMoving != bodyB)
+                        bodyB.ApplyCentralForce(forceVector);
+                }
             }
         }
     }
@@ -145,7 +168,6 @@ public partial class GraphController : Node2D
     private void _mouse_touching_node(RigidBody2D node)
     {
         childTouched.AddFirst(node);
-        GD.Print(childTouched.First.Value.ToString());
     }
 
     private void _mouse_not_touching_node(RigidBody2D node)
