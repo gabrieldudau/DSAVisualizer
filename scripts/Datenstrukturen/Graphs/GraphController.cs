@@ -7,6 +7,7 @@ using System.Linq;
 public partial class GraphController : Node2D
 {
     private Node2D springs;
+    private Node2D lines;
 
     private static readonly PackedScene NODE_CLASS = GD.Load<PackedScene>("res://scenes/Datenstrukturen/Graphs/graph_node.tscn");
     private const string BODY_GROUP = "celestial_bodies";
@@ -14,16 +15,18 @@ public partial class GraphController : Node2D
     [Export] public float damping_factor = 8.0f;
     [Export] public float repulsion_force = 10;
 
-    private LinkedList<RigidBody2D> childTouched = new LinkedList<RigidBody2D>();
-    private RigidBody2D childMoving = null;
+    private LinkedList<GraphNode> childTouched = new LinkedList<GraphNode>();
+    private GraphNode childMoving = null;
 
-    private RigidBody2D spring1 = null;
-    private Dictionary<RigidBody2D, HashSet<RigidBody2D>> springs_dict = new Dictionary<RigidBody2D, HashSet<RigidBody2D>>();
+    private GraphNode spring1 = null;
+    private Dictionary<GraphNode, HashSet<GraphNode>> springs_dict = new Dictionary<GraphNode, HashSet<GraphNode>>();
+    private Dictionary<Line2D, GraphNode[]> lineReffrence = new Dictionary<Line2D, GraphNode[]>();
 
     public override void _Ready()
     {
         // FIX: Initialize node references and connect signals here.
         springs = GetNode<Node2D>("Springs");
+        lines = GetNode<Node2D>("Lines");
         this.ChildEnteredTree += _on_child_entered_tree;
     }
 
@@ -56,13 +59,17 @@ public partial class GraphController : Node2D
         }
     }
 
+    /// <summary>
+    /// Adds a spring between spring1 and childTouched[0], and also adds a Line to the Graph. A refrence to the line is stored in both kids. 
+    /// </summary>
     public void add_spring()
     {
         if (spring1 == null || childTouched.Count == 0 || spring1 == childTouched.First.Value) return;
 
         if (!springs_dict.ContainsKey(spring1))
         {
-            springs_dict[spring1] = new HashSet<RigidBody2D>();
+            springs_dict[spring1] = new HashSet<GraphNode>();
+
         }
 
         if (springs_dict[spring1].Contains(childTouched.First.Value))
@@ -74,7 +81,7 @@ public partial class GraphController : Node2D
 
         if (!springs_dict.ContainsKey(childTouched.First.Value))
         {
-            springs_dict[childTouched.First.Value] = new HashSet<RigidBody2D>();
+            springs_dict[childTouched.First.Value] = new HashSet<GraphNode>();
         }
         springs_dict[childTouched.First.Value].Add(spring1);
 
@@ -83,6 +90,11 @@ public partial class GraphController : Node2D
         newSpring.NodeB = childTouched.First.Value.GetPath();
         newSpring.RestLength = 500;
         springs.AddChild(newSpring);
+        Line2D line = new Line2D();
+        line.AddPoint(spring1.Position);
+        line.AddPoint(childTouched.First.Value.Position);
+        lineReffrence[line] = new GraphNode[] { spring1, childTouched.First.Value };
+        lines.AddChild(line);
     }
 
     public void create_new_node(int posX, int posY, string text)
@@ -92,6 +104,15 @@ public partial class GraphController : Node2D
         createNode.Position = new Godot.Vector2(posX, posY);
         AddChild(createNode);
     }
+
+    public override void _Process(double delta)
+    {
+        foreach(Line2D line in lines.GetChildren()){
+            line.SetPointPosition(0, lineReffrence[line][0].Position);
+            line.SetPointPosition(1, lineReffrence[line][1].Position);
+        }
+    }
+
 
     public override void _PhysicsProcess(double delta)
     {
@@ -157,20 +178,22 @@ public partial class GraphController : Node2D
 
     private void _on_child_entered_tree(Node node)
     {
-        if (node is RigidBody2D rigidBody)
+        if (node is GraphNode graphNode)
         {
-            rigidBody.InputPickable = true;
-            rigidBody.MouseEntered += () => _mouse_touching_node(rigidBody);
-            rigidBody.MouseExited += () => _mouse_not_touching_node(rigidBody);
+            graphNode.InputPickable = true;
+            graphNode.MouseEntered += () => _mouse_touching_node(graphNode);
+            graphNode.MouseExited += () => _mouse_not_touching_node(graphNode);
         }
     }
 
-    private void _mouse_touching_node(RigidBody2D node)
+    private void _mouse_touching_node(GraphNode node)
     {
         childTouched.AddFirst(node);
     }
 
-    private void _mouse_not_touching_node(RigidBody2D node)
+    
+
+    private void _mouse_not_touching_node(GraphNode node)
     {
         if (childTouched.Count > 0)
         {

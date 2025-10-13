@@ -1,26 +1,28 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 [GlobalClass]
 public partial class GraphNode : RigidBody2D
 {
 
-	public UniversalNode BodyNode;
+	public UniversalNode bodyNode;
 	public CollisionShape2D col;
+	public List<Line2D> lines;
 
 	public override void _Ready()
 	{
 		col = GetNode<CollisionShape2D>("CollisionShape2D");
-		BodyNode = GetNode<UniversalNode>("universal_node");
+		bodyNode = GetNode<UniversalNode>("universal_node");
 		CircleShape2D shape = new CircleShape2D();
-		shape.Radius = BodyNode.radius;
+		shape.Radius = bodyNode.radius;
 		col.Shape = shape;
-		BodyNode.changeText(5);
+		bodyNode.changeText(5);
 	}
 
 	public void ChangeColor()
-    {
-        
-    }
+	{
+
+	}
 
 }

@@ -7,4 +7,6 @@ script = ExtResource("1_tdhwl")
 
 [node name="Springs" type="Node2D" parent="."]
 
+[node name="Lines" type="Node2D" parent="."]
+
 [connection signal="child_entered_tree" from="." to="." method="_on_child_entered_tree"]
