@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://chsvq3btit388"]
+
+[ext_resource type="Script" uid="uid://cs6grabotx10p" path="res://scripts/Datenstrukturen/graphs/scenes/dfs_bfs_controller.gd" id="1_3q0sk"]
+[ext_resource type="PackedScene" uid="uid://cg1wscoosapl7" path="res://scenes/Datenstrukturen/graphs/universal/graph.tscn" id="1_taexn"]
+
+[node name="DfsBfs" type="Node2D"]
+script = ExtResource("1_3q0sk")
+
+[node name="Graph" parent="." instance=ExtResource("1_taexn")]
+center_stiffness = 40.0
+repulsion_force = 50.0
+
+[node name="Camera2D" type="Camera2D" parent="."]

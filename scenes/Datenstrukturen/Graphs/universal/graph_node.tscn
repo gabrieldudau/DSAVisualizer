@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://gjdtpxixj6kn"]
+
+[ext_resource type="Script" uid="uid://qo8t54r0olu0" path="res://scripts/Datenstrukturen/graphs/universal/GraphNode.cs" id="1_0fclh"]
+[ext_resource type="PackedScene" uid="uid://csywo1wr0bpt8" path="res://scenes/Universal/universal_node.tscn" id="2_dxeu4"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_g4c53"]
+radius = 60.0
+
+[node name="Node2D" type="RigidBody2D" groups=["celestial_bodies"]]
+gravity_scale = 0.0
+lock_rotation = true
+script = ExtResource("1_0fclh")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_g4c53")
+
+[node name="universal_node" parent="." instance=ExtResource("2_dxeu4")]
+color = Color(0, 0.705882, 0, 1)
+radius = 50.0
+fontSize = 36

@@ -1,0 +1,55 @@
+[gd_scene load_steps=3 format=3 uid="uid://cngjeipa806v"]
+
+[ext_resource type="Script" uid="uid://cpalg0yhst37d" path="res://scripts/UI/test_graph_scene.gd" id="1_0pwm5"]
+[ext_resource type="PackedScene" uid="uid://cg1wscoosapl7" path="res://scenes/Datenstrukturen/graphs/universal/graph.tscn" id="2_emgn1"]
+
+[node name="TestGraphScene" type="Node2D"]
+script = ExtResource("1_0pwm5")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer"]
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 169.0
+grow_vertical = 2
+theme_override_constants/separation = 10
+
+[node name="Button" type="Button" parent="CanvasLayer/VBoxContainer"]
+layout_mode = 2
+text = "add node"
+
+[node name="CameraMove" type="Button" parent="CanvasLayer/VBoxContainer"]
+layout_mode = 2
+text = "camera toggle"
+
+[node name="HSlider" type="HSlider" parent="CanvasLayer/VBoxContainer"]
+layout_mode = 2
+step = 0.1
+
+[node name="HSlider2" type="HSlider" parent="CanvasLayer/VBoxContainer"]
+layout_mode = 2
+max_value = 200.0
+
+[node name="Container" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+grow_horizontal = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/Container"]
+layout_mode = 2
+offset_right = 40.0
+offset_bottom = 23.0
+text = "test"
+horizontal_alignment = 1
+
+[node name="Graph" parent="." instance=ExtResource("2_emgn1")]
+
+[connection signal="pressed" from="CanvasLayer/VBoxContainer/Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/VBoxContainer/CameraMove" to="." method="_on_camera_move_pressed"]
+[connection signal="value_changed" from="CanvasLayer/VBoxContainer/HSlider" to="." method="_on_h_slider_value_changed"]
+[connection signal="value_changed" from="CanvasLayer/VBoxContainer/HSlider2" to="." method="_on_h_slider_2_value_changed"]

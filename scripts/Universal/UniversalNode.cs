@@ -22,7 +22,6 @@ public partial class UniversalNode : Node2D
 
 	public override void _Draw()
 	{
-		GD.Print("Drawing");
 		DrawCircle(new Vector2(0, 0), radius, Colors.Black);
 		DrawCircle(new Vector2(0, 0), radius - 5, color);
 	}
