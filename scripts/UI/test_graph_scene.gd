@@ -14,8 +14,9 @@ func _process(delta: float) -> void:
 	label.text = str(get_tree().get_nodes_in_group("celestial_bodies").size())
 
 func _on_button_pressed() -> void:
-	graph.create_new_node(randi() % 1000, randi() % 1500, num, Color.ALICE_BLUE)
-	num += 1
+	for i in range(0,50):
+		graph.create_new_node(randi() % 1000, randi() % 1500, num, Color.ALICE_BLUE)
+		num += 1
 
 func _on_camera_move_pressed() -> void:
 	moveable = not moveable

@@ -128,7 +128,8 @@ public partial class GraphController : Node2D
 
     public override void _Process(double delta)
     {
-        foreach(Line2D line in lines.GetChildren()){
+        foreach (Line2D line in lines.GetChildren())
+        {
             line.SetPointPosition(0, lineReffrence[line][0].Position);
             line.SetPointPosition(1, lineReffrence[line][1].Position);
         }
@@ -137,63 +138,85 @@ public partial class GraphController : Node2D
 
     public override void _PhysicsProcess(double delta)
     {
-        // FIX: base._PhysicsProcess(delta) is not needed as Node2D has no implementation for it.
-        var bodies = GetTree().GetNodesInGroup(BODY_GROUP);
+        // 1. SETUP & MOUSE HANDLING
+        var bodyNodes = GetTree().GetNodesInGroup(BODY_GROUP);
 
         var camera = GetViewport().GetCamera2D();
         Vector2 screenCenter = camera != null ? camera.GetScreenCenterPosition() : GetViewportRect().Size / 2;
 
+        // Handle mouse dragging first
         if (childMoving != null)
         {
             childMoving.Position = GetGlobalMousePosition();
-        }
-
-        foreach (RigidBody2D body in bodies)
-        {
-            if (body == childMoving)
+            // Reset velocity so it doesn't "explode" when released
+            if (childMoving is RigidBody2D rbChild)
             {
-                continue;
-            }
-
-            if (body is RigidBody2D rigidBody)
-            {
-                Vector2 toCenterVector = screenCenter - rigidBody.GlobalPosition;
-
-                // Attraction Force
-                Vector2 attractionForce = toCenterVector * center_stiffness;
-                rigidBody.ApplyCentralForce(attractionForce);
-
-                // Damping Force
-                Vector2 dragForce = -rigidBody.LinearVelocity * damping_factor;
-                rigidBody.ApplyCentralForce(dragForce);
+                rbChild.LinearVelocity = Vector2.Zero;
+                rbChild.AngularVelocity = 0;
             }
         }
-        for (int i = 0; i < bodies.Count; i++)
+
+        // 2. READ PHASE (Cache Data)
+        int count = bodyNodes.Count;
+        var activeBodies = new List<RigidBody2D>(count);
+        var positions = new List<Vector2>(count);
+        var velocities = new List<Vector2>(count);
+        var forces = new List<Vector2>(count);
+
+        for (int i = 0; i < count; i++)
         {
-
-            // Start the inner loop from 'i + 1' to avoid duplicate pairs and self-comparisons.
-            for (int j = i + 1; j < bodies.Count; j++)
+            // Skip the child being dragged or non-rigidbodies
+            if (bodyNodes[i] is RigidBody2D rb && rb != childMoving)
             {
-                if (bodies[i] is RigidBody2D bodyA && bodies[j] is RigidBody2D bodyB)
-                {
-                    Vector2 vectorBetween = bodyB.GlobalPosition - bodyA.GlobalPosition;
-                    float distance = vectorBetween.Length();
-
-                    if (distance < 1) // Using 1 pixel as a minimum distance squared
-                    {
-                        distance = 1;
-                    }
-
-                    // The force that pushes the nodes apart. 
-                    float forceMagnitude = (repulsion_force * 10000) / distance;
-                    Vector2 forceVector = vectorBetween.Normalized() * forceMagnitude;
-
-                    if (childMoving != bodyA)
-                        bodyA.ApplyCentralForce(-forceVector);
-                    if(childMoving != bodyB)
-                        bodyB.ApplyCentralForce(forceVector);
-                }
+                // API Calls are more expensive than natice C#
+                activeBodies.Add(rb);
+                positions.Add(rb.GlobalPosition);   
+                velocities.Add(rb.LinearVelocity);  
+                forces.Add(Vector2.Zero);           
             }
+        }
+
+        int activeCount = activeBodies.Count;
+
+        // 3. CALCULATION PHASE (Pure C# Math - No API Calls)
+        for (int i = 0; i < activeCount; i++)
+        {
+            Vector2 posA = positions[i];
+            Vector2 forceAccum = forces[i]; // Start with current accumulated force
+
+            // --- A. Center Attraction & Damping ---
+            Vector2 toCenter = screenCenter - posA;
+            forceAccum += toCenter * center_stiffness;
+            forceAccum += -velocities[i] * damping_factor;
+
+            // --- B. Repulsion (N^2 Loop) ---
+            for (int j = i + 1; j < activeCount; j++)
+            {
+                Vector2 posB = positions[j];
+                Vector2 vectorBetween = posB - posA;
+
+                float distSq = vectorBetween.LengthSquared();
+
+                if (distSq < 1.0f) distSq = 1.0f;
+
+                // Calculate the scaling factor based on squared distance
+                float strengthFactor = (repulsion_force * 10000.0f) / distSq;
+
+                Vector2 repulsionVector = vectorBetween * strengthFactor;
+
+                forceAccum -= repulsionVector;
+
+                
+                forces[j] += repulsionVector;
+            }
+
+            forces[i] = forceAccum;
+        }
+
+        // 4. WRITE PHASE (Apply to Engine)
+        for (int i = 0; i < activeCount; i++)
+        {
+            activeBodies[i].ApplyCentralForce(forces[i]);
         }
     }
 
@@ -212,7 +235,7 @@ public partial class GraphController : Node2D
         childTouched.AddFirst(node);
     }
 
-    
+
 
     private void _mouse_not_touching_node(GraphNode node)
     {
