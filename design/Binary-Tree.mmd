@@ -1,0 +1,134 @@
+---
+config:
+  layout: elk
+---
+classDiagram
+    direction TB
+    class ITreeObserver {
+        <<Interface>>
+        + OnTreeUpdated(moves: List~TreeEvent~)
+    }
+
+    class AbstractDataTree {
+        <<Abstract>>
+        + root: ITreeNode
+        + moveQueue: List~TreeEvent~
+        - observers: List~ITreeObserver~
+        + Attach(observer: ITreeObserver)
+        + Detach(observer: ITreeObserver)
+        + NotifyObservers()
+        + AddNode(i : int)*
+        + DeleteNode(i : int)*
+        + SearchNode(i : int)*
+    }
+    class TreeEvent {
+        <<Abstract>>
+        + NodeId: int
+    }
+
+    class NodeAddedEvent {
+        + parentId: int
+        + isLeftChild: bool
+        + value: int
+    }
+
+    class NodeMovedEvent {
+        + newParentId: int
+        + isLeftChild: bool
+    }
+
+    class ColorChangedEvent {
+        + isRed: bool
+    }
+    
+    class BTreeNodeSplitEvent {
+        + newRightNodeId: int
+        + promotedKey: int
+    }
+    class GraphicalTree {
+        - dataTree: AbstractDataTree
+        - isAnimating: bool
+        + OnTreeUpdated(moves: List~TreeEvent~)
+    }
+    class TreeFactory{
+        + dataTree: AbstractDataTree
+        + TreeFactory(type: String)
+        + createDataTree(type: String)
+        + createGraphicalTree(type: String)
+    }
+
+    class LearnUserView{
+        treeFactory: TreeFactory
+        addButton: Button
+        deleteButon: Button
+        searchButon: Button
+        dataTree: AbstractDataTree
+        LearnUserView(type: String)
+    }
+
+
+    class TestUserView{
+        treeFactory: TreeFactory
+        addButton: Button
+        deleteButon: Button
+        searchButon: Button
+        dataTree: AbstractDataTree
+        TestUserView(type: String)
+    }
+    class ITreeNode {
+        <<Interface>>
+        + NodeId: int
+    }
+
+    class IBinaryNode {
+        <<Interface>>
+        + Left: IBinaryNode
+        + Right: IBinaryNode
+        + Value: int
+    }
+
+    class IBTreeNode {
+        <<Interface>>
+        + Keys: List~int~
+        + Children: List~ITreeNode~
+    }
+
+    class RegularBinaryNode {
+    }
+
+    class RedBlackNode {
+        + IsRed: bool
+    }
+    
+    class BTreeNode {
+    }
+    class BinarySearchTree {
+    }
+
+    class RedBlackDataTree {
+    }
+
+    class BTree {
+        - order: int
+    }
+    ITreeObserver <|.. GraphicalTree : implements
+    AbstractDataTree o-- ITreeObserver : notifies
+    GraphicalTree --> AbstractDataTree : references
+    AbstractDataTree <|-- BinarySearchTree
+    AbstractDataTree <|-- RedBlackDataTree
+    AbstractDataTree <|-- BTree
+    TreeEvent <|-- NodeAddedEvent
+    TreeEvent <|-- NodeMovedEvent
+    TreeEvent <|-- ColorChangedEvent
+    TreeEvent <|-- BTreeNodeSplitEvent
+    ITreeNode <|-- IBinaryNode
+    ITreeNode <|-- IBTreeNode
+    IBinaryNode <|.. RegularBinaryNode
+    IBinaryNode <|.. RedBlackNode
+    IBTreeNode <|.. BTreeNode
+    AbstractDataTree o-- TreeEvent 
+    AbstractDataTree --> ITreeNode : root
+    TreeFactory ..> AbstractDataTree: create
+    TreeFactory ..> GraphicalTree: create
+    LearnUserView --> TreeFactory
+    TestUserView --> TreeFactory
